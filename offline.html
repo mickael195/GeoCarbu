@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>FuelMap · Hors-ligne</title>
+<meta name="theme-color" content="#f97316">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07090f; --surf: #0e1520; --surf2: #162030;
+  --border: #1e2e45; --accent: #f97316;
+  --text: #e8eef8; --text2: #7a99bb; --text3: #4a6080;
+  --amber: #f59e0b;
+}
+*,*::before,*::after { margin:0;padding:0;box-sizing:border-box; }
+body {
+  font-family: 'Figtree', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100dvh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 32px 24px;
+  text-align: center;
+}
+.icon-wrap {
+  width: 96px; height: 96px;
+  background: linear-gradient(135deg, var(--accent), #c2410c);
+  border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px; margin-bottom: 28px;
+  box-shadow: 0 8px 32px rgba(249,115,22,.3);
+  position: relative;
+}
+.offline-badge {
+  position: absolute; bottom: -6px; right: -6px;
+  width: 28px; height: 28px;
+  background: var(--amber); border-radius: 50%;
+  border: 3px solid var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+h1 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 32px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+h1 em { color: var(--accent); font-style: normal; }
+.subtitle {
+  font-size: 13px; color: var(--text3);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 32px;
+}
+.card {
+  background: var(--surf); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px 24px;
+  max-width: 360px; width: 100%;
+  margin-bottom: 20px;
+}
+.card-title {
+  font-family: 'Oswald', sans-serif; font-size: 11px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 12px;
+}
+.card p {
+  font-size: 14px; color: var(--text2); line-height: 1.7;
+}
+.wifi-icon {
+  font-size: 32px; margin-bottom: 12px;
+  display: block; opacity: .5;
+}
+.btn-retry {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px;
+  background: linear-gradient(135deg, var(--accent), #ea6000);
+  color: #fff; border: none; border-radius: 10px;
+  font-family: 'Oswald', sans-serif; font-size: 15px;
+  font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  cursor: pointer; text-decoration: none;
+  box-shadow: 0 4px 16px rgba(249,115,22,.3);
+  transition: transform .2s, box-shadow .2s;
+  margin-top: 8px;
+}
+.btn-retry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(249,115,22,.4);
+}
+
+/* Animated signal waves */
+.signal-rings {
+  position: relative; width: 80px; height: 80px;
+  margin: 0 auto 24px;
+}
+.signal-ring {
+  position: absolute; border-radius: 50%;
+  border: 2px solid var(--amber);
+  animation: expand 2s ease-out infinite;
+  opacity: 0;
+}
+.signal-ring:nth-child(1) { width:30px;height:30px;top:25px;left:25px; }
+.signal-ring:nth-child(2) { width:50px;height:50px;top:15px;left:15px; animation-delay:.5s; }
+.signal-ring:nth-child(3) { width:70px;height:70px;top:5px;left:5px;  animation-delay:1s; }
+@keyframes expand {
+  0%   { transform:scale(.5); opacity:.8; }
+  100% { transform:scale(1.2); opacity:0; }
+}
+.center-dot {
+  position: absolute; width: 14px; height: 14px;
+  background: var(--amber); border-radius: 50%;
+  top: 33px; left: 33px;
+  box-shadow: 0 0 12px var(--amber);
+}
+</style>
+</head>
+<body>
+  <div class="icon-wrap">
+    ⛽
+    <div class="offline-badge">⚡</div>
+  </div>
+
+  <h1>Fuel<em>Map</em></h1>
+  <p class="subtitle">Hors-ligne</p>
+
+  <div class="signal-rings">
+    <div class="signal-ring"></div>
+    <div class="signal-ring"></div>
+    <div class="signal-ring"></div>
+    <div class="center-dot"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ Connexion requise</div>
+    <p>
+      FuelMap a besoin d'une connexion internet pour récupérer les prix en temps réel depuis les données officielles du gouvernement.<br><br>
+      Vérifiez votre Wi-Fi ou votre connexion mobile, puis réessayez.
+    </p>
+  </div>
+
+  <a href="/" class="btn-retry">
+    🔄 &nbsp;Réessayer
+  </a>
+
+  <script>
+    // Auto-retry when connection is restored
+    window.addEventListener('online', () => {
+      window.location.href = '/';
+    });
+  </script>
+</body>
+</html>
