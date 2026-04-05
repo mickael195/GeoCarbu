@@ -1,15 +1,15 @@
 /* ════════════════════════════════════════════════════════
-   FuelMap Service Worker — v2.0
+   GeoCarbu Service Worker — v2.0
    Stratégies :
      • Static assets (HTML, fonts, Leaflet) → Cache-First
-     • API calls (data.economie, geo.api)  → Network-First + Cache Fallback
-     • Offline fallback                    → /offline.html
+     • API calls (data.economie, geo.api)   → Network-First + Cache Fallback
+     • Offline fallback                     → /offline.html
 ════════════════════════════════════════════════════════ */
 
-const APP_VERSION   = 'v2.0';
-const STATIC_CACHE  = `fuelmap-static-${APP_VERSION}`;
-const DATA_CACHE    = `fuelmap-data-${APP_VERSION}`;
-const OFFLINE_URL   = '/offline.html';
+const APP_VERSION  = 'v2.0';
+const STATIC_CACHE = `GeoCarbu-static-${APP_VERSION}`;
+const DATA_CACHE   = `GeoCarbu-data-${APP_VERSION}`;
+const OFFLINE_URL  = '/offline.html';
 
 /* Assets à pré-cacher à l'installation */
 const STATIC_ASSETS = [
@@ -35,32 +35,34 @@ const STATIC_DOMAINS = [
 
 /* ─── INSTALL ─────────────────────────────────────────── */
 self.addEventListener('install', event => {
-  console.log('[SW] Install', APP_VERSION);
+  console.log('[GeoCarbu SW] Install', APP_VERSION);
   event.waitUntil(
     caches.open(STATIC_CACHE)
-      .then(cache => cache.addAll(STATIC_ASSETS.map(url => new Request(url, { cache: 'reload' }))))
+      .then(cache => cache.addAll(
+        STATIC_ASSETS.map(url => new Request(url, { cache: 'reload' }))
+      ))
       .then(() => self.skipWaiting())
-      .catch(err => console.warn('[SW] Pre-cache error:', err))
+      .catch(err => console.warn('[GeoCarbu SW] Erreur pré-cache :', err))
   );
 });
 
 /* ─── ACTIVATE ────────────────────────────────────────── */
 self.addEventListener('activate', event => {
-  console.log('[SW] Activate', APP_VERSION);
+  console.log('[GeoCarbu SW] Activate', APP_VERSION);
   event.waitUntil(
     Promise.all([
-      // Purge old caches from previous versions
+      /* Suppression des anciens caches des versions précédentes */
       caches.keys().then(keys =>
         Promise.all(
           keys
             .filter(k => k !== STATIC_CACHE && k !== DATA_CACHE)
             .map(k => {
-              console.log('[SW] Deleting old cache:', k);
+              console.log('[GeoCarbu SW] Suppression ancien cache :', k);
               return caches.delete(k);
             })
         )
       ),
-      // Claim all open clients immediately
+      /* Prise en charge immédiate de tous les clients ouverts */
       self.clients.claim(),
     ])
   );
@@ -71,56 +73,59 @@ self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Skip non-GET requests
+  /* Ignorer les requêtes non-GET */
   if (request.method !== 'GET') return;
 
-  // Skip browser extensions and chrome-extension://
+  /* Ignorer les extensions navigateur (chrome-extension://, etc.) */
   if (!url.protocol.startsWith('http')) return;
 
-  // API calls → Network-First with cache fallback
+  /* API carburants / géolocalisation → Network-First + cache fallback */
   if (API_DOMAINS.some(domain => url.hostname.includes(domain))) {
     event.respondWith(networkFirstWithCache(request, DATA_CACHE));
     return;
   }
 
-  // Font / external static → Cache-First with network fallback
+  /* Fonts / assets externes → Cache-First + fallback réseau */
   if (STATIC_DOMAINS.some(domain => url.hostname.includes(domain))) {
     event.respondWith(cacheFirstWithNetwork(request, STATIC_CACHE));
     return;
   }
 
-  // Tile layers → Cache-First (tiles rarely change)
-  if (url.hostname.includes('cartocdn.com') || url.hostname.includes('openstreetmap.org')) {
+  /* Tuiles carte → Cache-First (les tuiles changent rarement) */
+  if (
+    url.hostname.includes('cartocdn.com') ||
+    url.hostname.includes('openstreetmap.org')
+  ) {
     event.respondWith(cacheFirstWithNetwork(request, STATIC_CACHE));
     return;
   }
 
-  // App shell (local files) → Cache-First, fallback to network then offline page
+  /* App shell (fichiers locaux) → Cache-First, page offline en dernier recours */
   event.respondWith(appShellStrategy(request));
 });
 
 /* ════════════════════════════════════════════════════════
-   STRATEGIES
+   STRATÉGIES
 ════════════════════════════════════════════════════════ */
 
 /**
- * Network-First: Try network, cache on success, return cached on failure.
- * Best for API data that should be fresh but still work offline.
+ * Network-First : réseau en priorité, mise en cache au succès,
+ * retour sur le cache en cas d'échec.
+ * Idéal pour les données API fraîches mais utilisables hors-ligne.
  */
 async function networkFirstWithCache(request, cacheName) {
   const cache = await caches.open(cacheName);
   try {
     const networkResponse = await fetch(request.clone());
     if (networkResponse.ok) {
-      // Cache a clone of the response
       cache.put(request, networkResponse.clone());
     }
     return networkResponse;
-  } catch (err) {
-    console.log('[SW] Network failed, serving from cache:', request.url);
+  } catch {
+    console.log('[GeoCarbu SW] Réseau indisponible, cache utilisé :', request.url);
     const cached = await cache.match(request);
     if (cached) return cached;
-    // Return a JSON error response so the app can handle it gracefully
+    /* Réponse JSON d'erreur pour que l'app puisse la gérer proprement */
     return new Response(
       JSON.stringify({ error: 'offline', message: 'Aucune donnée en cache.' }),
       { status: 503, headers: { 'Content-Type': 'application/json' } }
@@ -129,8 +134,9 @@ async function networkFirstWithCache(request, cacheName) {
 }
 
 /**
- * Cache-First: Return from cache if available, else fetch and cache.
- * Best for static assets that don't change often.
+ * Cache-First : retourne depuis le cache si disponible,
+ * sinon récupère depuis le réseau et met en cache.
+ * Idéal pour les assets statiques qui changent peu.
  */
 async function cacheFirstWithNetwork(request, cacheName) {
   const cached = await caches.match(request);
@@ -142,12 +148,13 @@ async function cacheFirstWithNetwork(request, cacheName) {
     if (response.ok) cache.put(request, response.clone());
     return response;
   } catch {
-    return new Response('', { status: 504, statusText: 'Network unavailable' });
+    return new Response('', { status: 504, statusText: 'Réseau indisponible' });
   }
 }
 
 /**
- * App Shell: Cache-First for local HTML/JS/CSS, offline page as last resort.
+ * App Shell : Cache-First pour les fichiers locaux HTML/JS/CSS,
+ * page offline intégrée en dernier recours.
  */
 async function appShellStrategy(request) {
   const cached = await caches.match(request);
@@ -159,29 +166,51 @@ async function appShellStrategy(request) {
     if (response.ok) cache.put(request, response.clone());
     return response;
   } catch {
-    // For navigation requests, return the offline page
     if (request.destination === 'document') {
       const offlinePage = await caches.match(OFFLINE_URL);
-      return offlinePage || new Response('<h1>Hors-ligne</h1>', {
-        headers: { 'Content-Type': 'text/html' }
-      });
+      return offlinePage || new Response(
+        `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GeoCarbu — Hors-ligne</title>
+  <style>
+    body { font-family: Figtree, sans-serif; background: #07090f; color: #e8eef8;
+           display: flex; align-items: center; justify-content: center;
+           height: 100dvh; margin: 0; text-align: center; padding: 24px; }
+    h1   { font-size: 2rem; margin-bottom: .5rem; }
+    p    { color: #7a99bb; }
+    span { font-size: 3rem; display: block; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div>
+    <span>⛽</span>
+    <h1>GeoCarbu</h1>
+    <p>Vous êtes hors-ligne.<br>Vérifiez votre connexion et réessayez.</p>
+  </div>
+</body>
+</html>`,
+        { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+      );
     }
     return new Response('', { status: 504 });
   }
 }
 
-/* ─── PUSH NOTIFICATIONS (placeholder) ───────────────── */
+/* ─── PUSH NOTIFICATIONS ──────────────────────────────── */
 self.addEventListener('push', event => {
   if (!event.data) return;
   const data = event.data.json();
   event.waitUntil(
-    self.registration.showNotification(data.title || 'FuelMap', {
-      body:  data.body  || 'Mise à jour des prix disponible.',
-      icon:  '/icons/icon-192.png',
-      badge: '/icons/icon-96.png',
-      tag:   'fuelmap-update',
+    self.registration.showNotification(data.title || 'GeoCarbu', {
+      body:     data.body || 'Mise à jour des prix disponible.',
+      icon:     '/icons/icon-192.png',
+      badge:    '/icons/icon-96.png',
+      tag:      'GeoCarbu-update',
       renotify: false,
-      data: { url: data.url || '/' },
+      data:     { url: data.url || '/' },
     })
   );
 });
@@ -199,17 +228,17 @@ self.addEventListener('notificationclick', event => {
   );
 });
 
-/* ─── BACKGROUND SYNC (placeholder) ──────────────────── */
+/* ─── BACKGROUND SYNC ─────────────────────────────────── */
 self.addEventListener('sync', event => {
   if (event.tag === 'sync-prices') {
-    console.log('[SW] Background sync: refreshing prices');
-    // Background sync would refresh cached station data here
+    console.log('[GeoCarbu SW] Background sync : rafraîchissement des prix');
+    /* Ici : logique de rafraîchissement des données stations en arrière-plan */
   }
 });
 
 /* ─── PERIODIC BACKGROUND SYNC ───────────────────────── */
 self.addEventListener('periodicsync', event => {
   if (event.tag === 'refresh-prices') {
-    console.log('[SW] Periodic sync: refreshing price cache');
+    console.log('[GeoCarbu SW] Periodic sync : mise à jour du cache prix');
   }
 });
