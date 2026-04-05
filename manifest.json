@@ -7,7 +7,7 @@
   "scope": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "theme_color": "#f97316",
   "background_color": "#07090f",
   "lang": "fr",
@@ -16,16 +16,16 @@
   "prefer_related_applications": false,
 
   "icons": [
-    { "src": "icons/icon-72.png",   "sizes": "72x72",   "type": "image/png" },
-    { "src": "icons/icon-96.png",   "sizes": "96x96",   "type": "image/png" },
-    { "src": "icons/icon-128.png",  "sizes": "128x128", "type": "image/png" },
-    { "src": "icons/icon-144.png",  "sizes": "144x144", "type": "image/png" },
-    { "src": "icons/icon-152.png",  "sizes": "152x152", "type": "image/png" },
-    { "src": "icons/icon-192.png",  "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png",  "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
-    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+    { "src": "icons/icon-72.png",          "sizes": "72x72",   "type": "image/png",     "purpose": "any" },
+    { "src": "icons/icon-96.png",          "sizes": "96x96",   "type": "image/png",     "purpose": "any" },
+    { "src": "icons/icon-128.png",         "sizes": "128x128", "type": "image/png",     "purpose": "any" },
+    { "src": "icons/icon-144.png",         "sizes": "144x144", "type": "image/png",     "purpose": "any" },
+    { "src": "icons/icon-152.png",         "sizes": "152x152", "type": "image/png",     "purpose": "any" },
+    { "src": "icons/icon-192.png",         "sizes": "192x192", "type": "image/png",     "purpose": "any" },
+    { "src": "icons/icon-512.png",         "sizes": "512x512", "type": "image/png",     "purpose": "any" },
+    { "src": "icons/icon-maskable-192.png","sizes": "192x192", "type": "image/png",     "purpose": "maskable" },
+    { "src": "icons/icon-maskable-512.png","sizes": "512x512", "type": "image/png",     "purpose": "maskable" },
+    { "src": "icons/icon.svg",             "sizes": "any",     "type": "image/svg+xml", "purpose": "any" }
   ],
 
   "shortcuts": [
@@ -34,42 +34,23 @@
       "short_name": "SP95",
       "description": "Localiser et chercher du SP95",
       "url": "/?fuel=sp95&auto=1",
-      "icons": [{ "src": "icons/shortcut-sp95.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     },
     {
       "name": "Gazole près de moi",
       "short_name": "Gazole",
       "description": "Localiser et chercher du Gazole",
       "url": "/?fuel=gazole&auto=1",
-      "icons": [{ "src": "icons/shortcut-gazole.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     },
     {
       "name": "E10 près de moi",
       "short_name": "E10",
       "description": "Localiser et chercher du E10",
       "url": "/?fuel=e10&auto=1",
-      "icons": [{ "src": "icons/shortcut-e10.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     }
   ],
-
-  "screenshots": [
-    {
-      "src": "screenshots/mobile-map.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Carte des stations à proximité"
-    },
-    {
-      "src": "screenshots/desktop-map.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Vue bureau — carte et liste des stations"
-    }
-  ],
-
-  "related_applications": [],
 
   "edge_side_panel": {
     "preferred_width": 400
