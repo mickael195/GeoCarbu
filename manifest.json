@@ -2,9 +2,9 @@
   "name": "GeoCarbu · Prix Carburants France",
   "short_name": "GeoCarbu",
   "description": "Prix des carburants en temps réel. Trouvez la station la moins chère autour de vous. Données officielles du gouvernement français.",
-  "start_url": "/",
-  "id": "/",
-  "scope": "/",
+  "start_url": "./",
+  "id": "./",
+  "scope": "./",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "orientation": "any",
@@ -16,16 +16,16 @@
   "prefer_related_applications": false,
 
   "icons": [
-    { "src": "icons/icon-72.png",          "sizes": "72x72",   "type": "image/png",     "purpose": "any" },
-    { "src": "icons/icon-96.png",          "sizes": "96x96",   "type": "image/png",     "purpose": "any" },
-    { "src": "icons/icon-128.png",         "sizes": "128x128", "type": "image/png",     "purpose": "any" },
-    { "src": "icons/icon-144.png",         "sizes": "144x144", "type": "image/png",     "purpose": "any" },
-    { "src": "icons/icon-152.png",         "sizes": "152x152", "type": "image/png",     "purpose": "any" },
-    { "src": "icons/icon-192.png",         "sizes": "192x192", "type": "image/png",     "purpose": "any" },
-    { "src": "icons/icon-512.png",         "sizes": "512x512", "type": "image/png",     "purpose": "any" },
-    { "src": "icons/icon-maskable-192.png","sizes": "192x192", "type": "image/png",     "purpose": "maskable" },
-    { "src": "icons/icon-maskable-512.png","sizes": "512x512", "type": "image/png",     "purpose": "maskable" },
-    { "src": "icons/icon.svg",             "sizes": "any",     "type": "image/svg+xml", "purpose": "any" }
+    { "src": "icons/icon-72.png",          "sizes": "72x72",   "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-96.png",          "sizes": "96x96",   "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-128.png",         "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-144.png",         "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-152.png",         "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-192.png",         "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-384.png",         "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png",         "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-192-maskable.png","sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-512-maskable.png","sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
 
   "shortcuts": [
@@ -33,21 +33,21 @@
       "name": "SP95 près de moi",
       "short_name": "SP95",
       "description": "Localiser et chercher du SP95",
-      "url": "/?fuel=sp95&auto=1",
+      "url": "./?fuel=sp95&auto=1",
       "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     },
     {
       "name": "Gazole près de moi",
       "short_name": "Gazole",
       "description": "Localiser et chercher du Gazole",
-      "url": "/?fuel=gazole&auto=1",
+      "url": "./?fuel=gazole&auto=1",
       "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     },
     {
       "name": "E10 près de moi",
       "short_name": "E10",
       "description": "Localiser et chercher du E10",
-      "url": "/?fuel=e10&auto=1",
+      "url": "./?fuel=e10&auto=1",
       "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     }
   ],
