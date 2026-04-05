@@ -1,6 +1,6 @@
 {
-  "name": "FuelMap · Prix Carburants France",
-  "short_name": "FuelMap",
+  "name": "GeoCarbu · Prix Carburants France",
+  "short_name": "GeoCarbu",
   "description": "Prix des carburants en temps réel. Trouvez la station la moins chère autour de vous. Données officielles du gouvernement français.",
   "start_url": "/",
   "id": "/",
@@ -21,7 +21,6 @@
     { "src": "icons/icon-128.png",  "sizes": "128x128", "type": "image/png" },
     { "src": "icons/icon-144.png",  "sizes": "144x144", "type": "image/png" },
     { "src": "icons/icon-152.png",  "sizes": "152x152", "type": "image/png" },
-    { "src": "icons/icon-180.png",  "sizes": "180x180", "type": "image/png" },
     { "src": "icons/icon-192.png",  "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icons/icon-512.png",  "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
